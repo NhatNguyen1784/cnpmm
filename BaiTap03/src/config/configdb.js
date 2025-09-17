@@ -1,26 +1,24 @@
-import { Sequelize } from 'sequelize';
-import dotenv from 'dotenv';
+require('dotenv').config();
+const mongoose = require('mongoose');
 
-dotenv.config();
-
-const sequelize = new Sequelize(
-    process.env.DB_NAME,
-    process.env.DB_USERNAME,
-    process.env.DB_PASSWORD,
-    {
-        host: process.env.DB_HOST || 'localhost',
-        dialect: 'mysql',
-        logging: false,
-    }
-);
+const dbState =[{
+    value : 0,
+    label : "Disconnected"
+},{
+    value : 1,
+    label : "Connected"
+},{
+    value : 2,
+    label : "Connecting"
+},{
+    value : 3,
+    label : "Disconnecting"
+}]
 
 const connectDB = async () => {
-    try {
-        await sequelize.authenticate();
-        console.log('Connection has been established successfully.');
-    } catch (error) {
-        console.error('Unable to connect to the database:', error);
-    }
-};
+    await mongoose.connect(process.env.MONGO_URI);
+    const state = Number(mongoose.connection.readyState);
+    console.log(`MongoDB is ${dbState.find(e => e.value === state).label}`);
+}
 
-export default connectDB;
+module.exports = connectDB;

@@ -34,8 +34,8 @@ async function postCRUD(req, res, next) {
     const msg = await CRUDService.createNewUser(req.body);
     console.log(msg);
     // sau khi tạo xong quay lại trang danh sách
-    return res.redirect('/get-crud');
-  } catch (err) { next(err); }
+    return res.redirect('/find-all');
+  } catch (err) { console.error(err); }
 }
 
 // Lấy data để edit
@@ -57,7 +57,7 @@ async function putCRUD(req, res, next) {
     const ok = await CRUDService.updateUser(req.body);
     if (!ok) return res.status(404).send('User not found');
     // Sau khi cập nhật thành công, chuyển về danh sách user
-    return res.redirect('/get-crud');
+    return res.redirect('/find-all');
   } catch (err) { next(err); }
 }
 
@@ -70,7 +70,7 @@ async function deleteCRUD(req, res, next) {
     const rows = await CRUDService.deleteUserById(id);
     if (rows === 0) return res.status(404).send('Not find user');
 
-    return res.redirect('/get-crud');
+    return res.redirect('/find-all');
   } catch (err) { next(err); }
 }
 
